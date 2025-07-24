@@ -8,24 +8,33 @@
     body {
       font-family: Arial, sans-serif;
       background: white;
-      margin: 20px;
+      margin: 10px;
       color: black;
+      display: flex;
+      gap: 20px;
+      justify-content: flex-start;
+      align-items: flex-start;
+      flex-wrap: wrap;
     }
 
-    h1 {
-      text-align: center;
-      margin-bottom: 20px;
+    h2 {
+      margin: 0 0 10px 0;
+      font-size: 16px;
+    }
+
+    .division-block {
+      max-width: 300px;
+      font-size: 12px;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 14px;
     }
 
     th, td {
       border: 1px solid #ccc;
-      padding: 8px;
+      padding: 4px;
       text-align: center;
     }
 
@@ -34,78 +43,60 @@
       font-weight: bold;
     }
 
-    tr.men {
+    .men th, .men td {
       background-color: #e0f0ff;
     }
 
-    tr.women {
+    .women th, .women td {
       background-color: #ffe0e0;
-    }
-
-    @media (max-width: 768px) {
-      table, thead, tbody, th, td, tr {
-        display: block;
-      }
-      thead tr {
-        display: none;
-      }
-      td {
-        position: relative;
-        padding-left: 50%;
-      }
-      td::before {
-        position: absolute;
-        top: 0;
-        left: 6px;
-        width: 45%;
-        padding-right: 10px;
-        white-space: nowrap;
-        font-weight: bold;
-        text-align: left;
-      }
-      td:nth-of-type(1)::before { content: "Division"; }
-      td:nth-of-type(2)::before { content: "Match"; }
-      td:nth-of-type(3)::before { content: "Ends"; }
-      td:nth-of-type(4)::before { content: "Score 1"; }
-      td:nth-of-type(5)::before { content: "Score 2"; }
     }
   </style>
 </head>
 <body>
-  <h1>Live Scoreboard</h1>
-  <table id="scoreTable">
-    <thead>
-      <tr>
-        <th>Division</th>
-        <th>Match</th>
-        <th>Ends</th>
-        <th>Score 1</th>
-        <th>Score 2</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
+  <div id="scoreboards"></div>
 
   <script>
     async function fetchScores() {
       try {
         const response = await fetch("https://cors-ecamm-score.netlify.app/.netlify/functions/scores");
         const data = await response.json();
-        const tableBody = document.querySelector("#scoreTable tbody");
-        tableBody.innerHTML = "";
+        const container = document.getElementById("scoreboards");
+        container.innerHTML = "";
 
+        const divisions = {};
         data.forEach(item => {
-          const row = document.createElement("tr");
-          row.className = item.division.includes("Men") ? "men" : "women";
+          if (!divisions[item.division]) divisions[item.division] = [];
+          divisions[item.division].push(item);
+        });
 
-          row.innerHTML = `
-            <td>${item.division}</td>
-            <td>${item.match}</td>
-            <td>${item.ends}</td>
-            <td>${item.score1}</td>
-            <td>${item.score2}</td>
+        Object.keys(divisions).forEach(division => {
+          const divBlock = document.createElement("div");
+          divBlock.className = `division-block ${division.includes("Men") ? "men" : "women"}`;
+
+          divBlock.innerHTML = `
+            <h2>${division}</h2>
+            <table>
+              <thead>
+                <tr>
+                  <th>Match</th>
+                  <th>Ends</th>
+                  <th>Score 1</th>
+                  <th>Score 2</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${divisions[division].map(item => `
+                  <tr>
+                    <td>${item.match}</td>
+                    <td>${item.ends}</td>
+                    <td>${item.score1}</td>
+                    <td>${item.score2}</td>
+                  </tr>
+                `).join("")}
+              </tbody>
+            </table>
           `;
-          tableBody.appendChild(row);
+          container.appendChild(divBlock);
         });
       } catch (err) {
         console.error("Error fetching scores:", err);
@@ -113,7 +104,7 @@
     }
 
     fetchScores();
-    setInterval(fetchScores, 10000); // every 10 seconds
+    setInterval(fetchScores, 10000);
   </script>
 </body>
 </html>
