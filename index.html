@@ -2,89 +2,134 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Live Scoreboard</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: white;
-      margin: 0;
+      background: white;
       padding: 20px;
     }
-    h1 {
-      text-align: center;
-      font-size: 28px;
-    }
-    .container {
-      display: flex;
-      justify-content: center;
-    }
-    table {
-      border-collapse: collapse;
-      width: auto;
-      font-size: 16px;
-      margin-top: 10px;
-    }
-    th, td {
-      border: 1px solid #ccc;
-      padding: 8px 12px;
-      text-align: center;
-    }
-    th {
-      background-color: #f0f0f0;
-    }
-    .division-men {
-      background-color: #e6f0ff;
-    }
-    .division-women {
-      background-color: #ffe6e6;
-    }
-    .division-header {
-      font-weight: bold;
+
+    h2 {
       text-align: left;
-      padding-left: 8px;
-      background-color: #cccccc;
-      font-size: 18px;
+      font-size: 1.5em;
+      margin-top: 2em;
+    }
+
+    table {
+      width: 100%;
+      max-width: 600px;
+      border-collapse: collapse;
+      margin-bottom: 2em;
+    }
+
+    th, td {
+      padding: 8px 10px;
+      text-align: center;
+      border: 1px solid #ccc;
+    }
+
+    th {
+      background: #f0f0f0;
+    }
+
+    .mens {
+      background: #e0f0ff;
+    }
+
+    .womens {
+      background: #ffe0e0;
+    }
+
+    .match-men {
+      font-weight: bold;
+      color: #0055cc;
+    }
+
+    .match-women {
+      font-weight: bold;
+      color: #cc0000;
+    }
+
+    .ends {
+      background: #fff9cc;
+    }
+
+    .score-header-red {
+      background: red;
+      color: white;
+      font-weight: bold;
+    }
+
+    .score-header-blue {
+      background: blue;
+      color: white;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
   <h1>Live Scoreboard</h1>
-  <div class="container">
-    <table id="scoreTable"></table>
-  </div>
+  <div id="scoreboard"></div>
 
   <script>
+    const url = "https://cors-ecamm-score.netlify.app/.netlify/functions/scores";
+
     async function fetchScores() {
-      const res = await fetch("https://cors-ecamm-score.netlify.app/.netlify/functions/scores");
+      const res = await fetch(url);
       const data = await res.json();
 
-      const men = data.filter(d => d.division.startsWith("Men"));
-      const women = data.filter(d => d.division.startsWith("Women"));
+      const divisions = {
+        "Men's Stars": [],
+        "Men's Stripes": [],
+        "Women's Stars": [],
+        "Women's Stripes": []
+      };
 
-      let html = "";
+      data.forEach(match => {
+        if (divisions[match.Division]) {
+          divisions[match.Division].push(match);
+        }
+      });
 
-      function renderGroup(title, rows, colorClass) {
-        let output = `<tr><td class='division-header' colspan='5'>${title}</td></tr>`;
-        output += `<tr><th>Division</th><th>Match</th><th>Ends</th><th>Score 1</th><th>Score 2</th></tr>`;
-        rows.forEach(row => {
-          output += `<tr class='${colorClass}'>
-            <td>${row.division}</td>
-            <td>${row.match}</td>
-            <td>${row.ends}</td>
-            <td>${row.score1}</td>
-            <td>${row.score2}</td>
-          </tr>`;
+      const container = document.getElementById("scoreboard");
+      container.innerHTML = "";
+
+      for (const division in divisions) {
+        const isWomen = division.startsWith("Women");
+        const bgClass = isWomen ? "womens" : "mens";
+        const matchClass = isWomen ? "match-women" : "match-men";
+
+        const table = document.createElement("table");
+
+        const caption = document.createElement("h2");
+        caption.textContent = division;
+        container.appendChild(caption);
+
+        const header = document.createElement("tr");
+        header.innerHTML = `
+          <th>Match</th>
+          <th class="ends">Ends</th>
+          <th class="score-header-red">🔴</th>
+          <th class="score-header-blue">🔵</th>
+        `;
+        table.appendChild(header);
+
+        divisions[division].forEach(match => {
+          const row = document.createElement("tr");
+          row.className = bgClass;
+          row.innerHTML = `
+            <td class="${matchClass}">${match.Match}</td>
+            <td class="ends">${match.Ends}</td>
+            <td>${match.Score1}</td>
+            <td>${match.Score2}</td>
+          `;
+          table.appendChild(row);
         });
-        return output;
+
+        container.appendChild(table);
       }
-
-      html += renderGroup("Men's Singles", men.filter(m => m.division.includes("Stars")), "division-men");
-      html += renderGroup("Men's Pairs", men.filter(m => m.division.includes("Stripes")), "division-men");
-      html += renderGroup("Women's Singles", women.filter(w => w.division.includes("Stars")), "division-women");
-      html += renderGroup("Women's Pairs", women.filter(w => w.division.includes("Stripes")), "division-women");
-
-      document.getElementById("scoreTable").innerHTML = html;
     }
 
     fetchScores();
