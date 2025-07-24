@@ -1,92 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Live Scoreboard</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 1rem;
-      background-color: #000;
-      font-family: Arial, sans-serif;
-      color: #fff;
-    }
-
-    h1 {
-      font-size: 1.5rem;
-      margin-bottom: 1rem;
-    }
-
-    .scoreboard {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      max-width: 400px;
-    }
-
-    .card {
-      padding: 10px 15px;
-      border-radius: 10px;
-      background-color: #1c1c1c;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    }
-
-    .division-men {
-      border-left: 6px solid #1e90ff;
-    }
-
-    .division-women {
-      border-left: 6px solid #ff4d4d;
-    }
-
-    .match {
-      font-size: 1rem;
-      font-weight: bold;
-    }
-
-    .score {
-      color: limegreen;
-      font-size: 1.2rem;
-      margin-top: 5px;
-    }
-  </style>
-</head>
-<body>
-  <h1>Live Scoreboard</h1>
-  <div class="scoreboard" id="scoreboard"></div>
-
-  <script>
-    const endpoint = "https://cors-ecamm-score.netlify.app/.netlify/functions/scores";
-
-    async function fetchScores() {
-      try {
-        const response = await fetch(endpoint);
-        const data = await response.json();
-
-        const scoreboard = document.getElementById("scoreboard");
-        scoreboard.innerHTML = "";
-
-        data.forEach((game) => {
-          const card = document.createElement("div");
-          const isWomen = game.division.toLowerCase().includes("women");
-          const className = isWomen ? "division-women" : "division-men";
-
-          card.className = `card ${className}`;
-          card.innerHTML = `
-            <div class="division">${game.division}</div>
-            <div class="match">${game.match}</div>
-            <div class="score">${game.score1} - ${game.score2}</div>
-          `;
-          scoreboard.appendChild(card);
-        });
-      } catch (err) {
-        console.error("Failed to fetch scores:", err);
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Live Scoreboard</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 1rem;
+        font-family: Arial, sans-serif;
+        background-color: black;
+        color: white;
       }
-    }
 
-    fetchScores();
-    setInterval(fetchScores, 10000);
-  </script>
-</body>
+      h1 {
+        text-align: left;
+        margin-left: 1rem;
+      }
+
+      #scoreboard {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        margin-left: 1rem;
+      }
+
+      .card {
+        padding: 0.75rem 1rem;
+        border-radius: 0.5rem;
+        background-color: #1e1e1e;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+        width: 100%;
+        max-width: 400px;
+      }
+
+      .mens {
+        border-left: 6px solid dodgerblue;
+      }
+
+      .womens {
+        border-left: 6px solid crimson;
+      }
+
+      .match {
+        font-size: 1.1rem;
+        font-weight: bold;
+      }
+
+      .division {
+        font-size: 0.9rem;
+        color: #aaa;
+      }
+
+      .score {
+        font-size: 1.3rem;
+        color: lime;
+        font-weight: bold;
+        margin-top: 0.25rem;
+      }
+
+      @media screen and (max-width: 768px) {
+        .card {
+          max-width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Live Scoreboard</h1>
+    <div id="scoreboard"></div>
+
+    <script>
+      const endpoint =
+        "https://cors-ecamm-score.netlify.app/.netlify/functions/scores";
+
+      async function fetchScores() {
+        try {
+          const response = await fetch(endpoint);
+          const data = await response.json();
+          const scoreboard = document.getElementById("scoreboard");
+          scoreboard.innerHTML = "";
+
+          data.forEach((match) => {
+            const card = document.createElement("div");
+            const isMens = match.division.includes("Men");
+            card.className = `card ${isMens ? "mens" : "womens"}`;
+            card.innerHTML = `
+              <div class="division">${match.division}</div>
+              <div class="match">${match.match}</div>
+              <div class="score">${match.score1} - ${match.score2}</div>
+            `;
+            scoreboard.appendChild(card);
+          });
+        } catch (error) {
+          console.error("Failed to fetch scores:", error);
+        }
+      }
+
+      fetchScores();
+      setInterval(fetchScores, 10000);
+    </script>
+  </body>
 </html>
