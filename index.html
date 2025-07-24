@@ -1,104 +1,119 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Live Scoreboard</title>
-    <style>
-      body {
-        margin: 0;
-        padding: 1rem;
-        font-family: Arial, sans-serif;
-        background-color: black;
-        color: white;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Live Scoreboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: white;
+      margin: 20px;
+      color: black;
+    }
 
-      h1 {
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #f0f0f0;
+      font-weight: bold;
+    }
+
+    tr.men {
+      background-color: #e0f0ff;
+    }
+
+    tr.women {
+      background-color: #ffe0e0;
+    }
+
+    @media (max-width: 768px) {
+      table, thead, tbody, th, td, tr {
+        display: block;
+      }
+      thead tr {
+        display: none;
+      }
+      td {
+        position: relative;
+        padding-left: 50%;
+      }
+      td::before {
+        position: absolute;
+        top: 0;
+        left: 6px;
+        width: 45%;
+        padding-right: 10px;
+        white-space: nowrap;
+        font-weight: bold;
         text-align: left;
-        margin-left: 1rem;
       }
+      td:nth-of-type(1)::before { content: "Division"; }
+      td:nth-of-type(2)::before { content: "Match"; }
+      td:nth-of-type(3)::before { content: "Ends"; }
+      td:nth-of-type(4)::before { content: "Score 1"; }
+      td:nth-of-type(5)::before { content: "Score 2"; }
+    }
+  </style>
+</head>
+<body>
+  <h1>Live Scoreboard</h1>
+  <table id="scoreTable">
+    <thead>
+      <tr>
+        <th>Division</th>
+        <th>Match</th>
+        <th>Ends</th>
+        <th>Score 1</th>
+        <th>Score 2</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 
-      #scoreboard {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-        margin-left: 1rem;
+  <script>
+    async function fetchScores() {
+      try {
+        const response = await fetch("https://cors-ecamm-score.netlify.app/.netlify/functions/scores");
+        const data = await response.json();
+        const tableBody = document.querySelector("#scoreTable tbody");
+        tableBody.innerHTML = "";
+
+        data.forEach(item => {
+          const row = document.createElement("tr");
+          row.className = item.division.includes("Men") ? "men" : "women";
+
+          row.innerHTML = `
+            <td>${item.division}</td>
+            <td>${item.match}</td>
+            <td>${item.ends}</td>
+            <td>${item.score1}</td>
+            <td>${item.score2}</td>
+          `;
+          tableBody.appendChild(row);
+        });
+      } catch (err) {
+        console.error("Error fetching scores:", err);
       }
+    }
 
-      .card {
-        padding: 0.75rem 1rem;
-        border-radius: 0.5rem;
-        background-color: #1e1e1e;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
-        width: 100%;
-        max-width: 400px;
-      }
-
-      .mens {
-        border-left: 6px solid dodgerblue;
-      }
-
-      .womens {
-        border-left: 6px solid crimson;
-      }
-
-      .match {
-        font-size: 1.1rem;
-        font-weight: bold;
-      }
-
-      .division {
-        font-size: 0.9rem;
-        color: #aaa;
-      }
-
-      .score {
-        font-size: 1.3rem;
-        color: lime;
-        font-weight: bold;
-        margin-top: 0.25rem;
-      }
-
-      @media screen and (max-width: 768px) {
-        .card {
-          max-width: 100%;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <h1>Live Scoreboard</h1>
-    <div id="scoreboard"></div>
-
-    <script>
-      const endpoint =
-        "https://cors-ecamm-score.netlify.app/.netlify/functions/scores";
-
-      async function fetchScores() {
-        try {
-          const response = await fetch(endpoint);
-          const data = await response.json();
-          const scoreboard = document.getElementById("scoreboard");
-          scoreboard.innerHTML = "";
-
-          data.forEach((match) => {
-            const card = document.createElement("div");
-            const isMens = match.division.includes("Men");
-            card.className = `card ${isMens ? "mens" : "womens"}`;
-            card.innerHTML = `
-              <div class="division">${match.division}</div>
-              <div class="match">${match.match}</div>
-              <div class="score">${match.score1} - ${match.score2}</div>
-            `;
-            scoreboard.appendChild(card);
-          });
-        } catch (error) {
-          console.error("Failed to fetch scores:", error);
-        }
-      }
-
-      fetchScores();
-      setInterval(fetchScores, 10000);
-    </script>
-  </body>
+    fetchScores();
+    setInterval(fetchScores, 10000); // every 10 seconds
+  </script>
+</body>
 </html>
