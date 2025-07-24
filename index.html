@@ -6,77 +6,89 @@
   <title>Live Scoreboard</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #111;
-      color: #fff;
       margin: 0;
-      padding: 20px;
+      font-family: sans-serif;
+      background-color: #111;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
+
     h1 {
-      text-align: center;
+      margin: 20px 0;
       font-size: 2rem;
-      margin-bottom: 20px;
     }
-    .scoreboard {
+
+    .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
+      width: 90%;
+      max-width: 1200px;
       padding: 10px;
     }
+
     .card {
-      background: #222;
+      background-color: #222;
       border-radius: 12px;
-      padding: 16px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+      padding: 15px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
     }
+
     .division {
-      font-size: 1rem;
+      font-size: 0.9rem;
       color: #bbb;
-      margin-bottom: 8px;
     }
+
     .match {
-      font-size: 1.2rem;
-      margin-bottom: 6px;
-    }
-    .score {
-      font-size: 1.5rem;
+      font-size: 1.1rem;
       font-weight: bold;
-      color: #0f0;
+      margin-top: 5px;
+    }
+
+    .score {
+      margin-top: 8px;
+      font-size: 1.3rem;
+      color: limegreen;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
   <h1>Live Scoreboard</h1>
-  <div class="scoreboard" id="scoreboard"></div>
+  <div id="scoreboard" class="grid"></div>
 
   <script>
-    const API_URL = 'https://cors-ecamm-score.netlify.app/.netlify/functions/scores';
+    const API_URL = "https://cors-ecamm-score.netlify.app/.netlify/functions/scores";
 
-    async function fetchScores() {
+    async function loadScores() {
       try {
-        const response = await fetch(API_URL);
-        const data = await response.json();
+        const res = await fetch(API_URL);
+        const data = await res.json();
 
-        const container = document.getElementById('scoreboard');
-        container.innerHTML = '';
+        const scoreboard = document.getElementById("scoreboard");
+        scoreboard.innerHTML = "";
 
         data.forEach(game => {
-          const card = document.createElement('div');
-          card.className = 'card';
+          const card = document.createElement("div");
+          card.className = "card";
+
           card.innerHTML = `
             <div class="division">${game.division}</div>
             <div class="match">${game.match}</div>
             <div class="score">${game.score1} - ${game.score2}</div>
           `;
-          container.appendChild(card);
+
+          scoreboard.appendChild(card);
         });
       } catch (err) {
-        console.error('Error loading scores:', err);
+        console.error("Failed to load scores:", err);
       }
     }
 
-    fetchScores();
-    setInterval(fetchScores, 10000); // Refresh every 10 seconds
+    loadScores();
+    setInterval(loadScores, 10000); // refresh every 10 sec
   </script>
 </body>
 </html>
