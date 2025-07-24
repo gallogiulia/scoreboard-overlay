@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Live Scoreboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #fff;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 20px;
+    }
+    .scoreboard {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      padding: 10px;
+    }
+    .card {
+      background: #222;
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+    }
+    .division {
+      font-size: 1rem;
+      color: #bbb;
+      margin-bottom: 8px;
+    }
+    .match {
+      font-size: 1.2rem;
+      margin-bottom: 6px;
+    }
+    .score {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #0f0;
+    }
+  </style>
+</head>
+<body>
+  <h1>Live Scoreboard</h1>
+  <div class="scoreboard" id="scoreboard"></div>
+
+  <script>
+    const API_URL = 'https://cors-ecamm-score.netlify.app/.netlify/functions/scores';
+
+    async function fetchScores() {
+      try {
+        const response = await fetch(API_URL);
+        const data = await response.json();
+
+        const container = document.getElementById('scoreboard');
+        container.innerHTML = '';
+
+        data.forEach(game => {
+          const card = document.createElement('div');
+          card.className = 'card';
+          card.innerHTML = `
+            <div class="division">${game.division}</div>
+            <div class="match">${game.match}</div>
+            <div class="score">${game.score1} - ${game.score2}</div>
+          `;
+          container.appendChild(card);
+        });
+      } catch (err) {
+        console.error('Error loading scores:', err);
+      }
+    }
+
+    fetchScores();
+    setInterval(fetchScores, 10000); // Refresh every 10 seconds
+  </script>
+</body>
+</html>
