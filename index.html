@@ -1,45 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Live Scoreboard</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       background: white;
-      padding: 20px;
+      padding: 10px 20px;
+      text-align: left;
+    }
+
+    h1 {
+      font-size: 1.6em;
+      margin-bottom: 0.5em;
     }
 
     h2 {
-      text-align: left;
-      font-size: 1.5em;
-      margin-top: 2em;
+      font-size: 1.2em;
+      margin-top: 1.5em;
+      margin-bottom: 0.3em;
     }
 
     table {
-      width: 100%;
-      max-width: 600px;
+      width: auto;
       border-collapse: collapse;
-      margin-bottom: 2em;
+      font-size: 0.9em;
+      margin-bottom: 1em;
     }
 
     th, td {
-      padding: 8px 10px;
-      text-align: center;
+      padding: 6px 10px;
       border: 1px solid #ccc;
+      text-align: center;
     }
 
-    th {
-      background: #f0f0f0;
+    .ends {
+      background: #fff9cc;
     }
 
     .mens {
-      background: #e0f0ff;
+      background-color: #e0f0ff;
     }
 
     .womens {
-      background: #ffe0e0;
+      background-color: #ffe0e0;
     }
 
     .match-men {
@@ -52,18 +58,14 @@
       color: #cc0000;
     }
 
-    .ends {
-      background: #fff9cc;
-    }
-
     .score-header-red {
-      background: red;
+      background-color: red;
       color: white;
       font-weight: bold;
     }
 
     .score-header-blue {
-      background: blue;
+      background-color: blue;
       color: white;
       font-weight: bold;
     }
@@ -80,31 +82,31 @@
       const res = await fetch(url);
       const data = await res.json();
 
-      const divisions = {
-        "Men's Stars": [],
-        "Men's Stripes": [],
-        "Women's Stars": [],
-        "Women's Stripes": []
+      const groupings = {
+        "Men's Singles": [],
+        "Men's Pairs": [],
+        "Women's Singles": [],
+        "Women's Pairs": []
       };
 
       data.forEach(match => {
-        if (divisions[match.Division]) {
-          divisions[match.Division].push(match);
+        if (groupings[match.Group]) {
+          groupings[match.Group].push(match);
         }
       });
 
       const container = document.getElementById("scoreboard");
       container.innerHTML = "";
 
-      for (const division in divisions) {
-        const isWomen = division.startsWith("Women");
+      for (const group in groupings) {
+        const isWomen = group.startsWith("Women");
         const bgClass = isWomen ? "womens" : "mens";
         const matchClass = isWomen ? "match-women" : "match-men";
 
         const table = document.createElement("table");
 
         const caption = document.createElement("h2");
-        caption.textContent = division;
+        caption.textContent = group;
         container.appendChild(caption);
 
         const header = document.createElement("tr");
@@ -116,7 +118,7 @@
         `;
         table.appendChild(header);
 
-        divisions[division].forEach(match => {
+        groupings[group].forEach(match => {
           const row = document.createElement("tr");
           row.className = bgClass;
           row.innerHTML = `
