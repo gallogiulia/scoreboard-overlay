@@ -1,5 +1,4 @@
 <body>
-
   <div id="scoreboard" style="margin-left: 10px;"></div>
 
   <script>
@@ -46,27 +45,27 @@
         });
         table.appendChild(header);
 
-        data.filter(row => row.Division === division).forEach(row => {
+        data.filter(row => row.division === division).forEach(row => {
           const tr = document.createElement("tr");
 
           const matchCell = document.createElement("td");
-          matchCell.textContent = row.Match;
+          matchCell.textContent = row.match;
           matchCell.className = division.includes("Women") ? "match-women womens" : "match-men mens";
           tr.appendChild(matchCell);
 
           const endsCell = document.createElement("td");
-          endsCell.textContent = row.Ends;
+          endsCell.textContent = row.ends;
           endsCell.className = "ends";
           tr.appendChild(endsCell);
 
           const score1 = document.createElement("td");
-          score1.textContent = row["Score 1"];
+          score1.textContent = row.score1;
           score1.style.background = "red";
           score1.style.color = "white";
           tr.appendChild(score1);
 
           const score2 = document.createElement("td");
-          score2.textContent = row["Score 2"];
+          score2.textContent = row.score2;
           score2.style.background = "blue";
           score2.style.color = "white";
           tr.appendChild(score2);
