@@ -72,9 +72,14 @@
     th:nth-child(4), td:nth-child(4) { width: 7%;
       background-color: white !important;
 
-    h2 {
-    color: white;
-    }
+    .scoreboard-header {
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
+  margin-bottom: 4px;
+  text-align: left;
+}
+
 }
 
   
@@ -95,13 +100,12 @@
       const divisions = ["Stars", "Stripes"];
 
       divisions.forEach(division => {
-        const section = document.createElement("div");
+      const section = document.createElement("div");
 
-        const heading = document.createElement("h2");
-        heading.textContent = division;
-        heading.style.fontSize = "14px";
-        heading.style.marginBottom = "4px";
-        section.appendChild(heading);
+      const heading = document.createElement("h2");
+      heading.textContent = division;
+      heading.className = "scoreboard-header"; // 👈 use only class
+      section.appendChild(heading);
 
         const table = document.createElement("table");
         table.style.marginBottom = "10px";
