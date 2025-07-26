@@ -89,80 +89,73 @@
     loadScores();
     setInterval(loadScores, 10000);
   </script>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: white;
+    padding: 10px;
+    font-size: 11px;
+  }
 
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: white;
-      padding: 10px;
-      font-size: 11px;
-    }
+  table {
+    border-collapse: collapse;
+    font-size: 11px;
+    width: 100%; /* full width of parent */
+    max-width: 350px; /* cap total width */
+    table-layout: fixed;
+  }
 
-    table {
-      border-collapse: collapse;
-      font-size: 11px;
-      width: 350px; /* Adjust this number as needed */
-      table-layout: fixed;
-    }
+  th, td {
+    padding: 3px 4px;
+    border: 1px solid #ccc;
+    text-align: center;
+    word-wrap: break-word;
+    vertical-align: middle;
+  }
 
-    th, td {
-      padding: 3px 6px;
-      border: 1px solid #ccc;
-      text-align: center;
-      word-wrap: break-word;
-      vertical-align: middle;
-    }
+  /* Column sizing for consistency */
+  th:nth-child(1), td:nth-child(1) {
+    width: 55%; /* Match column */
+  }
 
-    .ends {
-      background: #fff9cc;
-      font-weight: bold;
-    }
+  th:nth-child(2), td:nth-child(2) {
+    width: 15%; /* Ends column */
+  }
 
-    .score-header-red {
-      background-color: red;
-      color: white;
-      font-weight: bold;
-    }
+  th:nth-child(3), td:nth-child(3),
+  th:nth-child(4), td:nth-child(4) {
+    width: 15%; /* Scores columns */
+  }
 
-    .score-header-blue {
-      background-color: blue;
-      color: white;
-      font-weight: bold;
-    }
+  .ends {
+    background: #fff9cc;
+    font-weight: bold;
+  }
 
-    .match-men {
-      font-weight: bold;
-      color: #0055cc;
-    }
+  .score-header-red, .score-header-blue {
+    background-color: white;
+    color: gray;
+    font-weight: bold;
+  }
 
-    .match-women {
-      font-weight: bold;
-      color: #cc0000;
-    }
-    /* New background colors for group tables */
-    .table-stars {
-      background-color: #ffe0e0; /* light red */
-    }
+  .match-men {
+    font-weight: bold;
+    color: #0055cc;
+  }
 
-    .table-stripes {
-      background-color: #e0f0ff; /* light blue */
-    }
+  .match-women {
+    font-weight: bold;
+    color: #cc0000;
+  }
 
-    /* Force consistent column widths */
-    th:nth-child(1), td:nth-child(1) {
-      width: 45%; /* Match column — wide */
-    }
+  .table-stars {
+    background-color: #ffe0e0; /* light red */
+  }
 
-    th:nth-child(2), td:nth-child(2) {
-      width: 10%; /* Ends column */
-    }
+  .table-stripes {
+    background-color: #e0f0ff; /* light blue */
+  }
 
-    th:nth-child(3), td:nth-child(3),
+</style>
 
-    th:nth-child(4), td:nth-child(4) {
-      width: 10%; /* Ends + Scores — small */
-    }
-    
-
-  </style>
 </body>
