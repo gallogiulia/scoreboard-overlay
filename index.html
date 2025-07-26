@@ -62,14 +62,10 @@
     }
 
     /* Adjusted column widths */
-    th:nth-child(1), td:nth-child(1) {
-      width: 60%;
-    }
-
-    th:nth-child(2), td:nth-child(2),
-    th:nth-child(3), td:nth-child(3),
-    th:nth-child(4), td:nth-child(4) {
-      width: 13.3%;
+    th:nth-child(1), td:nth-child(1) { width: 50%;}
+    th:nth-child(2), td:nth-child(2) { width: 10%;}
+    th:nth-child(3), td:nth-child(3) { width: 7%;}
+    th:nth-child(4), td:nth-child(4) { width: 7%;
       background-color: white !important;
 }
 
@@ -111,7 +107,7 @@
         }
 
         const colgroup = document.createElement("colgroup");
-        ["60%", "13.3%", "13.3%", "13.3%"].forEach(width => {
+        ["50%", "10%", "7%", "7%"].forEach(width => {
           const col = document.createElement("col");
           col.style.width = width;
           colgroup.appendChild(col);
