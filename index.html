@@ -58,7 +58,7 @@
 
           const matchCell = document.createElement("td");
           matchCell.textContent = row.match;
-          matchCell.className = division.includes("Women") ? "match-women womens" : "match-men mens";
+           matchCell.className = division === "Stars" ? "match-women" : "match-men";
           tr.appendChild(matchCell);
 
           const endsCell = document.createElement("td");
@@ -101,12 +101,16 @@
     table {
       border-collapse: collapse;
       font-size: 11px;
+      width: 350px; /* Adjust this number as needed */
+      table-layout: fixed;
     }
 
     th, td {
       padding: 3px 6px;
       border: 1px solid #ccc;
       text-align: center;
+      word-wrap: break-word;
+      vertical-align: middle;
     }
 
     .ends {
@@ -135,15 +139,7 @@
       font-weight: bold;
       color: #cc0000;
     }
-
-    .mens {
-      background-color: #e0f0ff;
-    }
-
-    .womens {
-      background-color: #ffe0e0;
-    }
-        /* New background colors for group tables */
+    /* New background colors for group tables */
     .table-stars {
       background-color: #ffe0e0; /* light red */
     }
