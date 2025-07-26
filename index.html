@@ -68,14 +68,14 @@
 
           const score1 = document.createElement("td");
           score1.textContent = row.score1;
-          score1.style.background = "red";
-          score1.style.color = "white";
+          score1.style.background = "#fff"; // white background
+          score1.style.color = "red";
           tr.appendChild(score1);
 
           const score2 = document.createElement("td");
           score2.textContent = row.score2;
-          score2.style.background = "blue";
-          score2.style.color = "white";
+          score2.style.background = "#fff"; // white background
+          score2.style.color = "blie";
           tr.appendChild(score2);
 
           table.appendChild(tr);
@@ -151,7 +151,7 @@
         /* Force consistent column widths */
     th:nth-child(1),
     td:nth-child(1) {
-      width: 65%; /* Match column — wide */
+      width: 58%; /* Match column — wide */
     }
 
     th:nth-child(2),
@@ -162,6 +162,7 @@
     td:nth-child(4) {
       width: 11.66%; /* Ends + Scores — small */
     }
+    
 
   </style>
 </body>
