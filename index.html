@@ -24,6 +24,13 @@
         table.style.marginBottom = "10px";
         table.style.fontSize = "11px";
         table.style.borderCollapse = "collapse";
+        // Apply background class based on division
+        if (division === "Stars") {
+          table.classList.add("table-stars");
+        } else if (division === "Stripes") {
+          table.classList.add("table-stripes");
+        }
+
 
         const header = document.createElement("tr");
         ["Match", "Ends", "", ""].forEach((text, index) => {
@@ -136,5 +143,14 @@
     .womens {
       background-color: #ffe0e0;
     }
+        /* New background colors for group tables */
+    .table-stars {
+      background-color: #ffe0e0; /* light red */
+    }
+
+    .table-stripes {
+      background-color: #e0f0ff; /* light blue */
+    }
+
   </style>
 </body>
