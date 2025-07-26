@@ -31,7 +31,7 @@
 
       // 👇 NEW: Add <colgroup> to control column widths precisely
       const colgroup = document.createElement("colgroup");
-      ["50%", "5%", "5%", "5%"].forEach(width => {
+      ["50%", "6%", "5%", "5%"].forEach(width => {
         const col = document.createElement("col");
         col.style.width = width;
         colgroup.appendChild(col);
@@ -95,3 +95,72 @@
   loadScores();
   setInterval(loadScores, 10000);
 </script>
+<style>
+  body {
+    font-family: Garamond, Georgia, serif;
+    background: white;
+    padding: 10px;
+    font-size: 11px;
+  }
+
+  table {
+    border-collapse: collapse;
+    font-size: 11px;
+    width: 350px;
+    table-layout: fixed;
+  }
+
+  th, td {
+    padding: 2px 4px;
+    border: 1px solid #ccc;
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+
+  .ends {
+    background: #fff9cc;
+    font-weight: bold;
+  }
+
+  .score-header-red {
+    background-color: red;
+    color: white;
+    font-weight: bold;
+  }
+
+  .score-header-blue {
+    background-color: blue;
+    color: white;
+    font-weight: bold;
+  }
+
+  .match-men {
+    font-weight: bold;
+    color: #0055cc;
+  }
+
+  .match-women {
+    font-weight: bold;
+    color: #cc0000;
+  }
+
+  .table-stars {
+    background-color: #ffe0e0; /* light red */
+  }
+
+  .table-stripes {
+    background-color: #e0f0ff; /* light blue */
+  }
+
+  /* Adjusted column widths */
+  th:nth-child(1), td:nth-child(1) {
+    width: 60%;
+  }
+
+  th:nth-child(2), td:nth-child(2),
+  th:nth-child(3), td:nth-child(3),
+  th:nth-child(4), td:nth-child(4) {
+    width: 13.3%;
+  }
+</style>
