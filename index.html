@@ -28,10 +28,11 @@
         table.style.borderCollapse = "collapse";
         // Apply stars/stripes background class
         if (division.includes("Stars")) {
-        table.classList.add("stars-bg");
+        section.classList.add("stars-bg");
         } else if (division.includes("Stripes")) {
-        table.classList.add("stripes-bg");
+        section.classList.add("stripes-bg");
         }
+
 
         const header = document.createElement("tr");
         ["Match", "Ends", "", ""].forEach((text, index) => {
